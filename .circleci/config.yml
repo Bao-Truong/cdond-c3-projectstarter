@@ -100,11 +100,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [frontend-build]
       - run:
           name: Scan frontend-Critical
           command: |
             cd frontend
+            npm install
             npm audit --audit-level=critical
 
   scan-backend:
@@ -118,6 +119,7 @@ jobs:
           name: Scan backend-Critical
           command: |
             cd backend
+            npm install
             npm audit --audit-level=critical
 
 
