@@ -242,8 +242,8 @@ jobs:
             cd backend
             echo $TYPEORM_MIGRATIONS_DIR >> sample.txt
             cat sample.txt
-            export TYPEORM_MIGRATIONS_DIR="~/project/backend/src/migrations"
             npm install
+            cd ~/project
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
