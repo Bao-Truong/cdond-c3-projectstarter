@@ -239,6 +239,7 @@ jobs:
           name: Run migrations
           command: |
             cd backend
+            echo $TYPEORM_MIGRATIONS_DIR
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
@@ -247,9 +248,7 @@ jobs:
       - run:
           name: Send migration results to memstash
           command: |
-            if grep -q "has been executed successfully." ./backend/migrations_dump.txt \
-            then \
-              curl -H "Content-Type: text/plain" -H "token: 7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7} fi
+            if grep -q "has been executed successfully." ./backend/migrations_dump.txt then curl -H "Content-Type: text/plain" -H "token: 7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7} fi
       - destroy-environment:
           stack_name: "backend"
       - destroy-environment:
@@ -291,22 +290,40 @@ jobs:
           stack_name: "frontend"
       # Here's where you will add some code to rollback on failure
 
-#   deploy-backend:
-#     docker:
-      # - image: circleci/node:13.8.0
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Deploy backend
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure
+  deploy-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["05:dd:20:70:3c:d8:a1:ab:62:15:22:7e:f9:f1:65:4a"]
+      
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt update
+            sudo apt install -y awscli tar gzip
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm install
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+
+      - destroy-environment:
+          stack_name: "backend"
+      - empty-s3   
+      - destroy-environment:
+          stack_name: "frontend"
+      # Here's where you will add some code to rollback on failure
 
 #   smoke-test:
 #     docker:
