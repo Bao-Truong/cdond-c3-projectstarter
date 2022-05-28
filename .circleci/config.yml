@@ -60,7 +60,7 @@ jobs:
           name: Build front-end
           command: |
             cat /etc/os-release    
-            sudo echo deb http://ppa.launchpad.net/ansible/ansible/ubuntu xenial main >>  /etc/apt/sources.list
+            echo deb http://ppa.launchpad.net/ansible/ansible/ubuntu xenial main >> sudo tee -a  /etc/apt/sources.list
             sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
             sudo apt update
             sudo apt install -y ansible
