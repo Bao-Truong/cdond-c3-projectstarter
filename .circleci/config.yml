@@ -18,7 +18,7 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack <<parameters.stack_name>> --reigon <<parameters.region>>
+            aws cloudformation delete-stack --stack-name <<parameters.stack_name>> --reigon <<parameters.region>>
 
 #   revert-migrations:
 #     description: Revert the last migration if successfully run in the current workflow.
@@ -149,11 +149,16 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install tar utilicty
+          command: |
+            yum install -y tar gzip
+      - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=udapeople \
+              --region us-east-2 \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
@@ -162,6 +167,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project=udapeople \
+              --region us-east-2 \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
@@ -169,6 +175,7 @@ jobs:
           command: |
             aws cloudformation describe-stacks \
             --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --region us-east-2 \
             --output text \
             --query "Stacks[0].Outputs[?(@.OutputKey=='PublicIp')].OutputValue" \
             >> .circleci/ansible/inventory.txt
@@ -179,8 +186,11 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+      
       - destroy-environment:
           stack_name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          stack_name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
       
       # Here's where you will add some code to rollback on failure
 

@@ -28,8 +28,10 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: global_window_key
-      ImageId: "ami-0eea504f45ef7a8f7"
+      # KeyName: global_window_key
+      # ImageId: "ami-0eea504f45ef7a8f7"
+      KeyName: udacity # If you use another key pair name, you should change this value to match.
+      ImageId: ami-068663a3c619dd892 
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
