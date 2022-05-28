@@ -28,10 +28,23 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: global_window_key # If you use another key pair name, you should change this value to match.
-      # If this ami id is not available for you, you can find another (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html)
-      # Ubuntu 18 or higher works fine
+      KeyName: global_window_key
       ImageId: "ami-0eea504f45ef7a8f7"
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
+
+Outputs:
+  PriviateDnsName:
+    Value: !GetAtt EC2Instance.PrivateDnsName
+  PrivateIp:
+    Value: !GetAtt EC2Instance.PrivateIp
+  PublicDnsName:
+    Value: !GetAtt EC2Instance.PublicDnsName
+  PublicIp:
+    Value: !GetAtt EC2Instance.PublicIp
+  ID:
+    Description: unique identifier
+    Value: !Sub ${ID}
+    # Export:
+    #   Name: !Sub "UniqueID"
