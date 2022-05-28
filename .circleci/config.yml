@@ -59,7 +59,10 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            cat /etc/os-release            
+            cat /etc/os-release    
+            cat /etc/apt/sources.list
+            echo ----
+            cat /etc/apt/sources.list.d/ansible.list    
             cd frontend
             npm install
             npm run build
