@@ -1,20 +1,15 @@
 ---
 - name: "npm install"
   become: true
+  command: "npm install"
   apt:
     upgrade: "yes"
 
-- name: "install dependencies."
-  become: true
-  apt:
-    name: ["nodejs", "npm"]
-    state: latest
-    update_cache: yes
+ - name: stop existing pm2 processes if running
+   command: "pm2 stop default"
+   become: yes
 
-- name: "install pm2"
-  become: true
-  npm:
-    name: pm2
-    global: yes
-    production: yes
-    state: present
+
+ - name: start pm2 process
+   command: 'pm2 start npm -- start'
+   become: yes

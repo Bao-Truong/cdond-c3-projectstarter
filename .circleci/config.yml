@@ -239,12 +239,12 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            echo $TYPEORM_MIGRATIONS_DIR
+            echo $TYPEORM_MIGRATIONS_DIR >> sample.txt
+            cat sample.txt
+            export TYPEORM_MIGRATIONS_DIR= "~/project/backend/src/migrations"
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-            pwd
-            ls -la ~/project 2>/dev/null
       - run:
           name: Send migration results to memstash
           command: |
