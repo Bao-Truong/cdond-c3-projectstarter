@@ -181,9 +181,9 @@ jobs:
             >> .circleci/ansible/inventory.txt
      
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
       
       - destroy-environment:
           stack_name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
@@ -199,7 +199,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["05:dd:20:70:3c:d8:a1:ab:62:15:22:7e:f9:f1:65:4a"]
       - attach_workspace:
-          at: project/.circleci/ansible/inventory.txt
+          at: .
       - run:
           name: Print iniventory.txt
           command: cat .circleci/ansible/inventory.txt
