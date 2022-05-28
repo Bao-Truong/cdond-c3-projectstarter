@@ -63,20 +63,6 @@ jobs:
             cd frontend
             npm install
             npm run build
-      - run:
-          name: Backend smoke test.
-          command: |
-            export BACKEND_IP="3.144.116.199"
-            export URL="http://${BACKEND_IP}:3030"
-            echo "${URL}"
-            # Test if website exists
-            if curl  "${URL}/api/status" | grep "ok"
-            then
-              return 0
-            else
-              return 1
-            fi
-      
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -376,8 +362,8 @@ jobs:
             export BACKEND_IP=$(aws cloudformation describe-stacks --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"  --region us-east-2 --output text --query "Stacks[0].Outputs[?(@.OutputKey=='PublicIp')].OutputValue")
             export URL="http://${BACKEND_IP}:3030"
             echo "${URL}"
-            # Test if website exists
-            if curl  "${URL}/api/status" | grep "ok"
+            sleep 5
+            if curl -s "${URL}/api/status" | grep "ok"
             then
               return 0
             else
