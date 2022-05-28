@@ -63,6 +63,20 @@ jobs:
             cd frontend
             npm install
             npm run build
+      - run:
+          name: Backend smoke test.
+          command: |
+            export BACKEND_IP="3.144.116.199"
+            export URL="http://${BACKEND_IP}:3030"
+            echo "${URL}"
+            # Test if website exists
+            if curl  "${URL}/api/status" | grep "ok"
+            then
+              return 0
+            else
+              return 1
+            fi
+      
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -242,8 +256,8 @@ jobs:
             cd backend
             echo $TYPEORM_MIGRATIONS_DIR >> sample.txt
             cat sample.txt
+            export TYPEORM_MIGRATIONS_DIR="~/project/backend/src/migrations"
             npm install
-            cd ~/project
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
