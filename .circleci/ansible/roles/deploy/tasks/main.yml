@@ -1,4 +1,9 @@
 ---
+- name: Copy build zip file
+  template:
+    src: "artifact.tar.gz"
+    dest: "~/artifact.tar.gz"
+    
 - name: "unzip"
   become: true
   command: "tar -xvf artifact.tar.gz "
