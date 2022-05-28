@@ -6,13 +6,13 @@ orbs:
 
 commands:
   empty-s3:
-    description: Empty S3 before destroy bucket   
+    description: Empty S3 before destroy bucket
     steps:
       - run:
           name: empty S3
           when: on_fail
           command: |
-              aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
@@ -264,7 +264,7 @@ jobs:
           command: |
             sudo apt update
             sudo apt install -y awscli tar gzip
-            
+
       - run:
           name: Get backend url
           command: |
@@ -279,13 +279,15 @@ jobs:
           command: |
             cd frontend
             npm install
-            np run build
+            npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      
+            pwd
+            ls -la
+
       - destroy-environment:
           stack_name: "backend"
-      - empty-s3   
+      - empty-s3
       - destroy-environment:
           stack_name: "frontend"
       # Here's where you will add some code to rollback on failure
@@ -295,9 +297,14 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt update
+            sudo apt install -y awscli tar gzip
       - add_ssh_keys:
           fingerprints: ["05:dd:20:70:3c:d8:a1:ab:62:15:22:7e:f9:f1:65:4a"]
-      
+
       - attach_workspace:
           at: .
       - run:
@@ -320,7 +327,7 @@ jobs:
 
       - destroy-environment:
           stack_name: "backend"
-      - empty-s3   
+      - empty-s3
       - destroy-environment:
           stack_name: "frontend"
       # Here's where you will add some code to rollback on failure
@@ -408,8 +415,8 @@ workflows:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:

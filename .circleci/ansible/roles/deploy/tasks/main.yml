@@ -1,15 +1,17 @@
 ---
+- name: "unzip"
+  become: true
+  command: "pwd && tar -xvf artifact.tar.gz "
+
 - name: "npm install"
   become: true
-  command: "pwd && cd backend && tar -xvf artifact.tar.gz && npm install"
-  apt:
-    upgrade: "yes"
+  command: "pwd && npm install"
 
  - name: stop existing pm2 processes if running
-   command: "cd backend && pm2 stop default"
+   command: "pm2 stop default"
    become: yes
 
 
  - name: start pm2 process
-   command: 'cd backend && pm2 start npm -- start'
+   command: 'pm2 start npm -- start'
    become: yes
