@@ -1,6 +1,6 @@
 ---
 - name: Copy build zip file
-  template:
+  copy:
     src: "~/project/artifact.tar.gz"
     dest: "~/artifact.tar.gz"
 
