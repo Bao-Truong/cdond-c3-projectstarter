@@ -40,7 +40,7 @@ For your submission, please submit the following:
   1. Only deploy on pushed to `master` branch. [SCREENSHOT10]
   1. Provide a screenshot of a graph of your EC2 instance including available memory, available disk space, and CPU usage. [SCREENSHOT11]
   1. Provide a screenshot of an alert that was sent by Prometheus. [SCREENSHOT12]
-
+-
 - Your presentation should be in PDF format named "presentation.pdf" and should be included in your code repository root folder. 
 
 Before you submit your project, please check your work against the project rubric. If you haven’t satisfied each criterion in the rubric, then revise your work so that you have met all the requirements. 
