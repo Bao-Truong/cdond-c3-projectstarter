@@ -41,7 +41,7 @@ commands:
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             # SUCCESS = $(curl -H "token: e52b52de-ee26-41a5-86e8-e8dcc3d995a5" --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
             SUCCESS=$(curl --insecure https://kvdb.io/$kvdb/migration_<< parameters.workflow_id >>)
-            if(( $SUCCESS=="1" ));
+            if $SUCCESS=="1" 
             then
               cd ~/project/backend
               npm install
